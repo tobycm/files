@@ -9,21 +9,29 @@ export default async function setupDatabase() {
   db.run(`
     CREATE TABLE IF NOT EXISTS files (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
+      title TEXT NOT NULL,
+      event_date INTEGER,
+      file_name TEXT NOT NULL,
       last_modified INTEGER NOT NULL,
       added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      title TEXT,
-      artist TEXT,
-      duration INTEGER
+      description TEXT
     )
   `);
 
   db.run(`
-    CREATE INDEX IF NOT EXISTS idx_files_artist ON files(artist);
-    CREATE INDEX IF NOT EXISTS idx_files_duration ON files(duration);
+    CREATE TABLE IF NOT EXISTS pending_files (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      event_date INTEGER,
+      file_name TEXT NOT NULL,
+      last_modified INTEGER NOT NULL,
+      added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      description TEXT
+    )
+  `);
+
+  db.run(`
     CREATE INDEX IF NOT EXISTS idx_files_added_at ON files(added_at);
-    CREATE INDEX IF NOT EXISTS idx_files_title ON files(title);
-    CREATE INDEX IF NOT EXISTS idx_files_name ON files(name);
   `);
 
   console.log("✅ Database tables and indexes created successfully.");
@@ -34,10 +42,9 @@ export default async function setupDatabase() {
   // - `content`: Specifies that this is an index for the 'files' table.
   // - `content_rowid`: Links the index to the 'id' column of the 'files' table.
   db.run(`
-    CREATE VIRTUAL TABLE IF NOT EXISTS songs_fts USING fts5(
-      name,
+    CREATE VIRTUAL TABLE IF NOT EXISTS files_fts USING fts5(
       title,
-      artist,
+      description,
       content='files',
       content_rowid='id'
     );
@@ -50,8 +57,8 @@ export default async function setupDatabase() {
     CREATE TRIGGER IF NOT EXISTS files_after_insert
     AFTER INSERT ON files
     BEGIN
-      INSERT INTO songs_fts(rowid, name, title, artist)
-      VALUES (new.id, new.name, new.title, new.artist);
+      INSERT INTO files_fts(rowid, title, description)
+      VALUES (new.id, new.title, COALESCE(new.description, ''));
     END;
   `);
 
@@ -60,10 +67,10 @@ export default async function setupDatabase() {
     CREATE TRIGGER IF NOT EXISTS files_after_update
     AFTER UPDATE ON files
     BEGIN
-      INSERT INTO songs_fts(songs_fts, rowid, name, title, artist)
-      VALUES ('delete', old.id, old.name, old.title, old.artist);
-      INSERT INTO songs_fts(rowid, name, title, artist)
-      VALUES (new.id, new.name, new.title, new.artist);
+      INSERT INTO files_fts(files_fts, rowid, title, description)
+      VALUES ('delete', old.id, old.title, old.description);
+      INSERT INTO files_fts(rowid, title, description)
+      VALUES (new.id, new.title, COALESCE(new.description, ''));
     END;
   `);
 
@@ -72,8 +79,8 @@ export default async function setupDatabase() {
     CREATE TRIGGER IF NOT EXISTS files_after_delete
     AFTER DELETE ON files
     BEGIN
-      INSERT INTO songs_fts(songs_fts, rowid, name, title, artist)
-      VALUES ('delete', old.id, old.name, old.title, old.artist);
+      INSERT INTO files_fts(files_fts, rowid, title, description)
+      VALUES ('delete', old.id, old.title, old.description);
     END;
   `);
 

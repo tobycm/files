@@ -16,10 +16,10 @@ export const useAppState = create<AppState>()(
       setDominantColor: (color: string) => set({ dominantColor: color }),
     }),
     {
-      name: "meowsic-storage",
+      name: "tobyfiles-storage",
       partialize: (state) => ({
         dominantColor: state.dominantColor,
       }),
-    }
-  )
+    },
+  ),
 );

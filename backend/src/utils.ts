@@ -1,1 +1,1 @@
-export const databasePath = process.env.DATABASE_PATH || "../data/meowsic.sqlite";
+export const databasePath = process.env.DATABASE_PATH || "../data/tobyfiles.sqlite";
