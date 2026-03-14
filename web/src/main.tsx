@@ -14,15 +14,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import App from "./App.tsx";
-import AppProvider from "./contexts/AppContext.tsx";
-import { api } from "./lib/api";
 
 import { WindowHistoryAdapter } from "use-query-params/adapters/window";
 
 import { colorsTuple, createTheme, MantineProvider } from "@mantine/core";
 import { QueryParamProvider } from "use-query-params";
 import "./index.css";
-import { useAppState } from "./states/AppState.ts";
 
 scan({
   enabled: true,
@@ -39,8 +36,6 @@ const queryClient = new QueryClient({
 
 // eslint-disable-next-line react-refresh/only-export-components
 function Root() {
-  const dominantColor = useAppState((state) => state.dominantColor);
-
   const theme = createTheme({
     primaryColor: "primary",
 
@@ -48,7 +43,7 @@ function Root() {
     headings: { fontFamily: "Ubuntu, sans-serif" },
 
     colors: {
-      primary: colorsTuple(dominantColor || "#ffafcc"),
+      primary: colorsTuple("#ffafcc"),
       secondary: colorsTuple("#cdb4db"),
       error: colorsTuple("#ff006e"),
       warn: colorsTuple("#ffbe0b"),
@@ -64,11 +59,9 @@ function Root() {
     <MantineProvider theme={theme}>
       <QueryParamProvider adapter={WindowHistoryAdapter}>
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ReactQueryDevtools initialIsOpen={false} position="top" />
 
-          <AppProvider api={api}>
-            <App />
-          </AppProvider>
+          <App />
         </QueryClientProvider>
       </QueryParamProvider>
     </MantineProvider>
@@ -78,5 +71,5 @@ function Root() {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Root />
-  </StrictMode>
+  </StrictMode>,
 );

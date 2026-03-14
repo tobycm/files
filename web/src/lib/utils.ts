@@ -35,3 +35,19 @@ export function shuffleArray<T>(array: T[], seed?: string): T[] {
   }
   return shuffled;
 }
+export function formatDate(value: number | string | null | undefined) {
+  if (value === null || value === undefined || value === "") return "Unknown";
+
+  const date =
+    typeof value === "number"
+      ? new Date(value < 1000000000000 ? value * 1000 : value)
+      : new Date(value.includes("T") ? value : value.replace(" ", "T"));
+
+  if (Number.isNaN(date.getTime())) return "Unknown";
+
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}

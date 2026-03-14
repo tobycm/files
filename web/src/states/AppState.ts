@@ -2,23 +2,23 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const initial = {
-  dominantColor: "",
+  apiKey: "",
 };
 
 type AppState = typeof initial & {
-  setDominantColor: (color: string) => void;
+  setApiKey: (apiKey: string) => void;
 };
 
 export const useAppState = create<AppState>()(
   persist(
     (set) => ({
       ...initial,
-      setDominantColor: (color: string) => set({ dominantColor: color }),
+      setApiKey: (apiKey: string) => set({ apiKey }),
     }),
     {
       name: "tobyfiles-storage",
       partialize: (state) => ({
-        dominantColor: state.dominantColor,
+        apiKey: state.apiKey,
       }),
     },
   ),
