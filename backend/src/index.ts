@@ -74,7 +74,6 @@ const app = new Elysia()
     }),
   )
   .get("/", () => "Hello Elysia and Toby Files!")
-  .get("/favicon.ico", () => Bun.file("./assets/favicon.ico"))
 
   .get("/files", () => selectAllFilesQuery.all(null))
 
