@@ -22,23 +22,23 @@ export default function Admin() {
   });
 
   return (
-    <Stack mih="100vh" c="primary" p="md" gap="md" align="center">
-      <Text fz={64} fw="bold" ta="center">
+    <Stack mih="100vh" maw="100%" c="primary" p="lg" gap="md" align="center">
+      <Text fz={{ base: 40, sm: 60 }} fw="bold" ta="center">
         Department of Pen High Justice
       </Text>
 
       {!apiKey && (
-        <Group w="30%" align="center">
+        <Group w={{ base: "100%", sm: "80%", md: "30%" }} align="center">
           <PasswordInput
-            w="60%"
+            w={{ base: "100%", sm: "60%" }}
             placeholder="API Key"
             value={tempApiKey}
             size="xl"
             onChange={(e) => setTempApiKey(e.target.value)}
-            styles={{ input: { backgroundColor: "#1e1e1e", color: "#ffafcc" } }}
+            styles={{ input: { backgroundColor: "#1e1e1e", color: "#feccde" } }}
           />
 
-          <Button w="30%" bg="blue" c="primary" size="lg" onClick={() => setApiKey(tempApiKey)} rightSection={<IconLogin />}>
+          <Button w={{ base: "100%", sm: "30%" }} bg="blue" c="primary" size="lg" onClick={() => setApiKey(tempApiKey)} rightSection={<IconLogin />}>
             Login
           </Button>
         </Group>

@@ -7,6 +7,7 @@ import FileCard from "./FileCard";
 
 export default function FileCards({ files, pending }: { files: TobyFile[]; pending?: boolean }) {
   const apiKey = useAppState((state) => state.apiKey);
+  const redacted = useAppState((state) => state.redacted);
   const queryClient = useQueryClient();
 
   const rejectPendingFile = useMutation({
@@ -38,7 +39,7 @@ export default function FileCards({ files, pending }: { files: TobyFile[]; pendi
             display: "inline-block",
             width: "100%",
           }}>
-          <FileCard file={file} pending={pending} />
+          <FileCard file={file} pending={pending} redacted={redacted} />
           {pending && (
             <Group p="md">
               <Button color="red" loading={rejectPendingFile.isPending} onClick={() => rejectPendingFile.mutate(file.id)}>

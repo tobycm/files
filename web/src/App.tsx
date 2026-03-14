@@ -1,24 +1,39 @@
 import { ActionIcon, Box } from "@mantine/core";
-import { IconArrowUp } from "@tabler/icons-react";
+import { IconArrowUp, IconEyeOff } from "@tabler/icons-react";
 
-import { useMediaQuery } from "@mantine/hooks";
-
-import { isMobileQuery } from "./lib/utils";
+import { useShallow } from "zustand/shallow";
 import Admin from "./pages/Admin";
 import Home from "./pages/Home";
+import { useAppState } from "./states/AppState";
 
 function App() {
-  const isMobile = useMediaQuery(isMobileQuery);
-
   const currentPath = window.location.pathname;
+  const redacted = useAppState((state) => state.redacted);
+  const toggleRedacted = useAppState(useShallow((state) => state.toggleRedacted));
 
   return (
     <Box>
       <ActionIcon
         pos="fixed"
         bottom="1.5rem"
+        left="1.5rem"
+        size="xl"
+        radius="xl"
+        c="primary"
+        bg="blue"
+        aria-label="Scroll to top"
+        onClick={() => {
+          toggleRedacted();
+        }}
+        style={{ zIndex: 10 }}>
+        {redacted ? <IconEyeOff size={20} /> : <IconArrowUp size={20} />}
+      </ActionIcon>
+
+      <ActionIcon
+        pos="fixed"
+        bottom="1.5rem"
         right="1.5rem"
-        size={isMobile ? 44 : 52}
+        size="xl"
         radius="xl"
         c="primary"
         bg="blue"

@@ -1,4 +1,5 @@
 import { Badge, Box, Card, Group, Image, Text } from "@mantine/core";
+import seedrandom from "seedrandom";
 import type { TobyFile } from "../../../backend/src/models";
 import { apiUrl, fileUrl } from "../lib/api";
 import { formatDate } from "../lib/utils";
@@ -29,7 +30,60 @@ function getPreviewKind(fileName: string): PreviewKind {
   return "other";
 }
 
-export default function FileCard({ file, pending }: { file: TobyFile; pending?: boolean }) {
+function getRedactionBars(file: TobyFile) {
+  const rng = seedrandom(`${file.id}-${file.file_name}`);
+
+  const chanceOfFullyRedacted = rng() * 20;
+  if (chanceOfFullyRedacted == 5) {
+    return [{ x: 5, y: 5, width: 90, height: 90 }];
+  }
+
+  const barCount = 18 + Math.floor(rng() * 12);
+  const bars: Array<{ x: number; y: number; width: number; height: number }> = [];
+
+  let y = 2 + rng() * 4;
+
+  for (let i = 0; i < barCount && y < 96; i += 1) {
+    const height = 7 + rng() * 6;
+    const width = 40 + rng() * 50;
+    const x = 5 + rng() * (95 - width);
+
+    bars.push({ x, y, width, height });
+    y += height + 2 + rng() * 2;
+  }
+
+  return bars;
+}
+
+function ImageRenderer({ file, pending, redacted }: { file: TobyFile; pending?: boolean; redacted?: boolean }) {
+  const redactionBars = getRedactionBars(file);
+
+  return (
+    <Box pos="relative">
+      <Image src={fileUrl(file, apiUrl, true, pending)} alt={file.title} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
+
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          opacity: redacted ? 1 : 0,
+          transition: "opacity 0.3s ease",
+        }}>
+        {redactionBars.map((bar, index) => (
+          <rect key={`${file.id}-${index}`} x={bar.x} y={bar.y} width={bar.width} height={bar.height} fill="black" />
+        ))}
+      </svg>
+    </Box>
+  );
+}
+
+export default function FileCard({ file, pending, redacted }: { file: TobyFile; pending?: boolean; redacted?: boolean }) {
   const fileDate = file.event_date ?? file.last_modified ?? file.added_at;
   const previewKind = getPreviewKind(file.file_name);
   const useGeneratedPreview = previewKind === "image" || previewKind === "pdf";
@@ -47,7 +101,7 @@ export default function FileCard({ file, pending }: { file: TobyFile; pending?: 
         )}
         {(previewKind === "image" || previewKind === "pdf") && (
           <a href={rawUrl} target="_blank" rel="noopener noreferrer">
-            <Image src={mediaUrl} alt={file.title} style={{ width: "100%", height: "auto", display: "block" }} />
+            <ImageRenderer file={file} pending={pending} redacted={redacted} />
           </a>
         )}
         {previewKind === "other" && (

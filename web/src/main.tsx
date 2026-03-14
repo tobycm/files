@@ -43,7 +43,7 @@ function Root() {
     headings: { fontFamily: "Ubuntu, sans-serif" },
 
     colors: {
-      primary: colorsTuple("#ffafcc"),
+      primary: colorsTuple("#feccde"),
       secondary: colorsTuple("#cdb4db"),
       error: colorsTuple("#ff006e"),
       warn: colorsTuple("#ffbe0b"),

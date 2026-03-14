@@ -1,7 +1,5 @@
 import seedrandom from "seedrandom";
 
-export const isMobileQuery = "(max-width: 56rem)";
-
 export function humanTime(date: Date): string {
   const hours = date.getUTCHours();
   const minutes = date.getUTCMinutes();
