@@ -1,5 +1,5 @@
 import { ActionIcon, Box } from "@mantine/core";
-import { IconArrowUp, IconEyeOff } from "@tabler/icons-react";
+import { IconArrowUp, IconEye, IconEyeOff } from "@tabler/icons-react";
 
 import { useShallow } from "zustand/shallow";
 import Admin from "./pages/Admin";
@@ -26,7 +26,7 @@ function App() {
           toggleRedacted();
         }}
         style={{ zIndex: 10 }}>
-        {redacted ? <IconEyeOff size={20} /> : <IconArrowUp size={20} />}
+        {redacted ? <IconEyeOff size={20} /> : <IconEye size={20} />}
       </ActionIcon>
 
       <ActionIcon

@@ -31,7 +31,7 @@ function getPreviewKind(fileName: string): PreviewKind {
 }
 
 function getRedactionBars(file: TobyFile) {
-  const rng = seedrandom(`${file.id}-${file.file_name}`);
+  const rng = seedrandom(`${file.file_name}`);
 
   const chanceOfFullyRedacted = rng() * 20;
   if (chanceOfFullyRedacted == 5) {
