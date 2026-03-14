@@ -14,9 +14,9 @@ export default function Home() {
   });
 
   return (
-    <Stack mih="100vh" c="primary" p="md" gap="md">
+    <Stack mih="100vh" c="primary" p="md" gap="md" align="center">
       <SubmitFileModal opened={opened} onClose={close} />
-      <Button pos="fixed" bottom="1.5rem" left="1.5rem" c="primary" bg="blue" onClick={open}>
+      <Button pos="fixed" bottom="1.5rem" left="1.5rem" c="primary" bg="blue" onClick={open} style={{ zIndex: 10 }}>
         Have tips?
       </Button>
 

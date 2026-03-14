@@ -25,7 +25,8 @@ function App() {
         aria-label="Scroll to top"
         onClick={() => {
           window.scrollTo({ top: 0, behavior: "smooth" });
-        }}>
+        }}
+        style={{ zIndex: 10 }}>
         <IconArrowUp size={20} />
       </ActionIcon>
 
